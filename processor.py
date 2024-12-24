@@ -41,3 +41,7 @@ class TranscriptProcessor:
         for lecture in self.lectures:
             lecture_knowledge = self.extractor.extract_lecture_knowledge(lecture, self.lectures[lecture]["variations"], self.lectures[lecture]["path_to_doc"])
             self.save_to_json({lecture: lecture_knowledge}, f"{lecture}.json")
+
+if __name__ == "__main__":
+    processor = TranscriptProcessor()
+    processor.process_lectures()

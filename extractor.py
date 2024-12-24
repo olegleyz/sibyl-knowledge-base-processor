@@ -5,6 +5,12 @@ import json
 import pandas as pd
 from enum import Enum
 from pathlib import Path
+from openai import OpenAI
+
+
+# Load environment variables
+load_dotenv()
+
 
 class Prompt(Enum):
     RUSSIAN_OUTPUT = """Please provide output in Russian using the Cyrillic alphabet. 
@@ -17,15 +23,18 @@ class Prompt(Enum):
 class Model(Enum):
     NOVA_MICRO = "amazon.nova-micro-v1:0"
     NOVA_LITE = "us.amazon.nova-lite-v1:0"
+    NOVA_PRO = "amazon.nova-pro-v1:0"
+    HAIKU_35 = "anthropic.claude-3-5-haiku-20241022-v1:0"
+    HAIKU_3 = "anthropic.claude-3-haiku-20240307-v1:0"
+    SONNET_35v2 = "anthropic.claude-3-5-sonnet-20241022-v2:0"
+    SONNET_35 = "anthropic.claude-3-5-sonnet-20240620-v1:0"
 
 
 class LectureKnowledgeExtractor:
-    def __init__(self):
-        # Load environment variables
-        load_dotenv()
+    def __init__(self, region="us-east-1"):
         self.bedrock_client = boto3.client(
             service_name='bedrock-runtime',
-            region_name=os.getenv('AWS_DEFAULT_REGION'))
+            region_name=region)
 
     def extract_doc_structure(self, path_to_doc):
         prompt = """Given transcript of a numerology lecture in russian language describes a numerological topic - a calculated number.
@@ -147,23 +156,40 @@ class LectureKnowledgeExtractor:
                 ]
             },
         ]
+        return self.chat(message=messages, model_id=model_id)
 
+    def chat(self, messages, model_id=Model.NOVA_LITE.value):
         max_retries = 3
         retry = 0
+        e = None
+        output=None
         while retry < max_retries:
             try:
-                model_response = self.bedrock_client.converse(
-                    modelId=model_id,
-                    messages=messages
-                )
-                output = model_response['output']['message']['content'][0]['text']
-                print(output)
+                output = self.invoke_llm(model_id=model_id, messages=messages)
+                
+                # print(f"raw output: {output}")
+                if output.startswith("```json"):
+                    output = output[8:-3]
+                output = output.replace('\n', '')
+                # print(output)
                 return self.process_llm_output_json(output)
-            except Exception as e:
-                print(f"Error while prompting text. {e}. Retrying...")
+            except Exception as e1:
+                # print(f"Error while prompting text. {e}. Retrying...")
+                e = e1
                 retry += 1
                 
-        raise ValueError(f"Error while prompting text with the prompt {prompt}.")
+        # return output
+        raise ValueError(f"Error: {e}. Output: {output}")
+
+    def invoke_llm(self, model_id, messages):
+        self.bedrock_client.converse(
+            modelId=model_id,
+            messages=messages,
+            # inferenceConfig={"maxTokens": 5120, "topP": 0.1, "temperature": 0.3}
+        )
+        output = model_response['output']['message']['content'][0]['text']
+        return output
+
 
     @staticmethod
     def process_llm_output_json(output):
@@ -175,7 +201,31 @@ class LectureKnowledgeExtractor:
             result = json.loads(result)
             return result
         except:
-            print(result)
-            raise ValueError("Error converting LLM output to json")
+            # print_pretty_text(f"Here is how the string look like before converting to json: {result}")
+            # return result
+            raise ValueError(f"Error converting LLM output to json: {result}")
     
     
+class OpenAIExtractor(LectureKnowledgeExtractor):
+    def __init__(self):
+        self.client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+    def prompt_text(self, prompt, model_id="ignored"):
+        model_id = "gpt-4o-mini"
+        messages = [
+            {
+                "role": "user", 
+                "content": prompt
+            }
+        ]
+        return self.chat(messages=messages, model_id=model_id)
+    
+    def invoke_llm(self, model_id, messages):
+        completion = self.client.chat.completions.create(
+            model=model_id,
+            store=True,
+            messages=messages
+        )
+        output = completion.choices[0].message.content
+        return output
+        

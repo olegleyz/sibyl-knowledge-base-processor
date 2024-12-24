@@ -1,6 +1,6 @@
 # AWS Bedrock Text Document Processor
 
-This project uses AWS Bedrock to process lecture trascriptions using Amazon Nova LLM models. 
+This project uses AWS Bedrock (with Nova LLM models) or Open AI to process lecture trascriptions. 
 
 ## Setup
 

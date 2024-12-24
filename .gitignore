@@ -17,6 +17,8 @@ env/
 .vscode/
 .idea/
 
-# Output files
+# Input and Output files
 data/output/*
+data/input/*
 !data/output/.gitkeep
+!data/input/.gitkeep
