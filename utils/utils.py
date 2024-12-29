@@ -1,7 +1,7 @@
 import textwrap
 
 # Function to wrap long strings in the dictionary
-def print_json_pretty(d, width=50):
+def print_json_pretty(d, width=150):
     if type(d) != dict:
         print(textwrap.fill(f"{d}", width=width))
         return

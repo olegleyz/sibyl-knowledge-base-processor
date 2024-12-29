@@ -1,5 +1,8 @@
-JSON_response = """
-Твой ответ должен быть в формате JSON в следующем виде:
+JSON_response_base = """
+Твой ответ должен быть в формате JSON в следующем виде:"""
+
+JSON_response = f"""
+{JSON_response_base}
     {{
         "text": "твой ответ здесь"
     }}"""
@@ -90,3 +93,65 @@ def get_recommendation(tr):
     Ответ должен быть кратким, не включать детальное описание проявлений людей на положительной и отрицательной энергиях.
     Не упомянай, в каких числах эти люди рождаются.
     Оригинальная транскрипция аудио лекции: {tr}"""
+
+def get_base_energy_day_reading(interpr_summary, interpr_pos, interpr_neg, interpr_recomm, name, sex, age, lang="ru"):
+    if lang == "en":
+        return f"""{JSON_response_base}
+        {{
+            "text": [general description, behaviors in positive energies, behaviors in negative energies, recommendations]
+        }}
+        I will provide you with a description of behaviors (both positive and negative) that are characteristic of people like {name}.
+        This description has been written universally for men, women, and children.
+        Adapt this text for the individual, addressing them personally by name, taking into account their gender ({"male" if sex == "m" else "female"}) and age ({age}).
+        Do not mention that your response is based on any specific text. Also, do not mention the person's birth month, day, age, or gender.
+        If the universal description mentions a characteristic specific to children or women, and the person is an adult man, do not mention it.
+
+        The output should be easy to read and understand, as it will be delivered as a text message. Use clear, simple language and structure to make it easy for the person to follow.
+
+        Instead of statements about what a person "is" or "always does," emphasize that this is possible if they make certain choices (e.g., "When a person chooses to be in harmony...").
+        Add phrases that show these are just possible behaviors ("This might be how they behave when...", "In moments when a person gives in to negative emotions, they tend to...").
+        Avoid absolute statements, especially when it comes to positive behaviors: people do not necessarily always behave, know, do, or achieve the things described in the text — they might behave in this way if they make the corresponding choice.
+        Focus on the context of choice and internal state.
+        General description: {interpr_summary}
+        Positive behaviors: {interpr_pos}
+        Behaviors under the influence of negative energies: {interpr_neg}
+        Recommendations: {interpr_recomm}"""
+    
+    return f"""{JSON_response_base}
+    {{
+        "text": [общее описание, проявления на позитивных энергиях, проявления на негативных энергиях, рекомендации]
+    }}
+    Я дам тебе описание проявлений (как положительных так и отрицательных), которое свойственный таким людям как {name}.
+    Это описание было написано универсально для мужчин, женщин, детей. 
+    Адаптируй этот текст для человека, обращаясь к нему лично по имени, учитывая его пол ({"мужской" if sex == "m" else "женский"}) и возраст ({age}).
+    Не упомянай, что твой ответ опирается на какой-либо текст. Так же не упомянай месяц, день рождения человека, возраст, пол человека.
+    Если универсальное описание упоминает какую-то характеристику специально для детей или женщин, а данные человек - взрослый мужчина, то не упомянай о них.
+    
+    Вместо утверждений о том, что человек "есть" или "всегда проявляется", подчеркни, что это возможно, если он делает определённый выбор (например, "Когда человек выбирает находиться в гармонии...").
+    Добавь фразы, которые показывают, что это лишь возможные проявления ("Может проявляться таким образом, когда...", "В моменты, когда человек поддается негативным эмоциям, он...").
+    Избегай абсолютных утверждений, особенно когда речь о положительных проявлениях: люди не обязательно всегда проявляются, умеют, знают, делают, достигают таких проявлений, как сказано в тексте - они могту так проявляться, если делают соответствующий выбор. 
+    Делай акцент на контексте выбора и внутреннего состояния.
+    Общее описание: {interpr_summary}
+    Проявления, свойственные в положительных проявлениях: {interpr_pos}
+    Проявления, свойственные под воздействием негативных энергий: {interpr_neg}
+    Рекомендации: {interpr_recomm}
+    """
+
+def get_be_month_prompt1(text):
+    return f"""{JSON_response_base}
+    {{
+        "text": {{"summary": "общее описание", "recommendation": "рекомендации"}}
+    }}
+    У меня есть описания, характерные людям родившиеся в определенный месяц. 
+    Как можно было бы адаптировать это описание, выделив две главы: общее описание энергии и рекомендации?
+    Не упомянай, что это описание энергии месяца, так же не упомянай название или номер месяца, знаки зодиака и так делаее. Только описание того, что людям свойственно.
+    Описание: {text}
+    """
+
+def translate_rus_to_en(text):
+    return f"""{JSON_response}
+    Tranlate the following text from Russian to English.
+    Instead of stating what a person "is" or "always shows," emphasize that this can happen if they make certain choices (e.g., "When a person chooses to be in harmony...").
+    Include phrases that highlight these as possible behaviors ("A person tends to behave this way when...", "In moments when a person gives in to negative emotions, they tend to...").
+    Avoid absolute statements (e.g., "they are like this" or "this always happens"), and focus on the context of choice and internal state.    
+    Text: {text}"""
