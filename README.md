@@ -35,6 +35,9 @@ TRANSCRIPTS_PATH=/path/to/transcripts
   - Recommendations
   - Monthly and daily interpretations
 - JSON-based storage for processed knowledge
+- Vector-based knowledge retrieval using Chroma DB
+- Semantic search for numerology interpretations
+- Filtering capabilities for personalized readings
 
 ## Project Structure
 ```
@@ -43,6 +46,7 @@ TRANSCRIPTS_PATH=/path/to/transcripts
 │   ├── input/          # Raw transcripts and text documents
 │   └── output/         # Processed knowledge bases
 ├── extractors/         # Core processing modules
+├── kb/                # Knowledge base management and vector storage
 ├── prompts/           # LLM prompt templates
 └── utils/             # Utility functions
 ```
@@ -53,6 +57,7 @@ TRANSCRIPTS_PATH=/path/to/transcripts
 - openai >= 0.27.4
 - pandas >= 2.0.0
 - jupyter >= 1.0.0
+- chromadb >= 0.4.0
 
 ## Usage
 The project provides functionality for:
@@ -60,5 +65,8 @@ The project provides functionality for:
 - Creating knowledge bases from transcripts
 - Translating content between Russian and English
 - Generating personalized interpretations
+- Vector-based storage and retrieval of numerology knowledge
+- Semantic search across the knowledge base
+- Filtering interpretations based on personal characteristics
 
-Example usage can be found in the respective extractor modules.
+Example usage can be found in the respective extractor and knowledge base modules.

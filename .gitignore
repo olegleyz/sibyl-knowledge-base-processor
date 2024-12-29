@@ -24,3 +24,7 @@ data/output/*
 data/input/*
 !data/output/.gitkeep
 !data/input/.gitkeep
+
+# Vector Database
+vector_db/*
+!vector_db/.gitkeep
