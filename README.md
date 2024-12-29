@@ -1,30 +1,64 @@
-# AWS Bedrock Text Document Processor
+# Sibyl Knowledge Base Processor
 
-This project uses AWS Bedrock (with Nova LLM models) or Open AI to process lecture trascriptions. 
+A specialized text processing system that transforms Russian numerology lecture transcriptions into structured knowledge bases for the [Sibyl chatbot](https://meet-sibyl.com). The system leverages both AWS Bedrock (with Amazon Nova foundational models) and OpenAI GPT-4 to process and structure numerological concepts, making them suitable for Retrieval-Augmented Generation (RAG) in the chatbot.
 
 ## Setup
 
-1. Install the required dependencies:
+1. Create and activate a virtual environment:
 ```bash
+python -m venv .venv
 source .venv/bin/activate
-pip install -r requirements.txt
 ```
 
-2. Configure AWS credentials:
-- Make sure you have AWS credentials configured with access to Bedrock service
-- Create a `.env` file with your AWS credentials (if not using AWS CLI configuration):
-```
-AWS_PROFILE=your_profile
-TRANSCRIPTS_PATH=/path/to/your/lectures
-```
-
-3. Process the transcriptions:
+2. Install the package in development mode:
 ```bash
-source .venv/bin/activate && python3 -m main
+pip install -e .
+```
+
+3. Configure environment:
+Create a `.env` file with the following variables:
+```
+AWS_PROFILE=your_aws_profile
+AWS_DEFAULT_REGION=us-east-1
+OPENAI_API_KEY=your_openai_key
+PATH_TO_PROJECT=/path/to/this/project
+TRANSCRIPTS_PATH=/path/to/transcripts
 ```
 
 ## Features
-- Load and process text documents
-- Interact with AWS Bedrock LLM models
-- Perform text analysis and knowledge extraction
-- Stores strucutred lectures in a JSON format
+- Process text documents using AWS Bedrock or OpenAI models
+- Create and manage base energy knowledge bases
+- Support for both Russian and English translations
+- Extract structured information including:
+  - Summaries
+  - Positive/negative aspects
+  - Recommendations
+  - Monthly and daily interpretations
+- JSON-based storage for processed knowledge
+
+## Project Structure
+```
+.
+├── data/
+│   ├── input/          # Raw transcripts and text documents
+│   └── output/         # Processed knowledge bases
+├── extractors/         # Core processing modules
+├── prompts/           # LLM prompt templates
+└── utils/             # Utility functions
+```
+
+## Dependencies
+- boto3 >= 1.28.0
+- python-dotenv >= 1.0.0
+- openai >= 0.27.4
+- pandas >= 2.0.0
+- jupyter >= 1.0.0
+
+## Usage
+The project provides functionality for:
+- Processing base energy readings
+- Creating knowledge bases from transcripts
+- Translating content between Russian and English
+- Generating personalized interpretations
+
+Example usage can be found in the respective extractor modules.
