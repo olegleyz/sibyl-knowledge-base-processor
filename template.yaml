@@ -24,4 +24,4 @@ Outputs:
     Description: ARN of the Sibyl Knowledge Base Lambda Layer
     Value: !Ref SibylKbLayer
     Export:
-      Name: SibylKbLayerArn
+      Name: SibylKbLayer
