@@ -8,6 +8,10 @@ __pycache__/
 *.egg-info/*
 build/*
 
+# SAM
+.DS_Store
+.aws-sam
+
 # Jupyter Notebook
 .ipynb_checkpoints
 

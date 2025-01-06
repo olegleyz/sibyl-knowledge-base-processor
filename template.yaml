@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: SAM template for deploying ChromaDB Lambda Layer
+
+Parameters:
+  Environment:
+    Type: String
+    Default: dev
+
+Resources:
+  SibylKbLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: lambda_layer
+      CompatibleRuntimes:
+        - python3.12
+      LayerName: !Sub "sibyl-layers-kb-${Environment}"
+      Description: Lambda layer containing ChromaDB and KB querier code
+    Metadata:
+      BuildMethod: makefile
+
+Outputs:
+  SibylKbLayerArn:
+    Description: ARN of the Sibyl Knowledge Base Lambda Layer
+    Value: !Ref SibylKbLayer
+    Export:
+      Name: SibylKbLayerArn
