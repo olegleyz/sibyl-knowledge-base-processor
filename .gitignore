@@ -16,6 +16,7 @@ build/*
 .ipynb_checkpoints
 
 # Virtual Environment
+lambda_layer/.venv
 venv/
 env/
 

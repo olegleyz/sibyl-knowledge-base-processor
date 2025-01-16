@@ -18,10 +18,26 @@ Resources:
       Description: Lambda layer containing ChromaDB and KB querier code
     Metadata:
       BuildMethod: makefile
-
+  SibylInterpLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: lambda_layer/interpretations
+      CompatibleRuntimes:
+        - python3.12
+      LayerName: !Sub "sibyl-layers-interpr-${Environment}"
+      Description: Lambda layer containing numerology interpretations
+    Metadata:
+      BuildMethod: makefile
+  
 Outputs:
-  SibylKbLayerArn:
+  SibylKbLayer:
     Description: ARN of the Sibyl Knowledge Base Lambda Layer
     Value: !Ref SibylKbLayer
     Export:
       Name: SibylKbLayer
+
+  SibylInterprLayer:
+    Description: ARN of the Sibyl Interpretations Lambda Layer
+    Value: !Ref SibylInterpLayer
+    Export:
+      Name: SibylInterprLayer
